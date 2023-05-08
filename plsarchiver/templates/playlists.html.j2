@@ -1,0 +1,29 @@
+{% extends "layout.html.j2" %}
+{% block content %}
+    <h1>My playlists</h1>
+    {{ user }}
+    <table class="pure-table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Details</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for playlist in playlists %}
+            <tr>
+                <td><a href="{{ playlist["external_urls"]["spotify"] }}" target="_blank">{{ playlist["name"] }}</a> ({{ playlist["tracks"]["total"] }} tracks)</td>
+                <td>{{ playlist["description"] }}</td>
+                <td>{{ playlist }}</td>
+                <td>
+                    <ul>
+                        <li><a href="{{ url_for("export_playlist", pls_id=playlist["id"]) }}">Export</a></li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

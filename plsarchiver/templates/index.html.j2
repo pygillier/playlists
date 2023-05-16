@@ -1,4 +1,14 @@
 {% extends "layout.html.j2" %}
 {% block content %}
-<a href="{{ url_for("playlists") }}">View my playlists</a>
+    <p>On Spotify, managing your playlists and liked songs can be a burden. Let's try to ease it!</p>
+    <ul>
+        <li><a href="{{ url_for("likes") }}">Manage my liked songs</a> (export, convert)</li>
+        <li>
+            <a>Export my playlists</a> (soon)
+        </li>
+    </ul>
+    <div class="alert alert-warning" role="alert">
+        We only require specific permissions on Spotify to manage your lists. Go to Spotify's <a target="_blank" href="https://www.spotify.com/us/account/apps/">Apps</a>
+        page to manage access.
+    </div>
 {% endblock content %}

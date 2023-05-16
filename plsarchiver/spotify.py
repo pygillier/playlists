@@ -1,7 +1,8 @@
+from typing import Any
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 from spotipy.cache_handler import FlaskSessionCacheHandler
-from flask import Flask, session
+from flask import Flask, session, current_app
 
 
 def reduce_exporter(item):
@@ -17,6 +18,7 @@ def reduce_exporter(item):
 
     return item
 
+
 class SpotifyExtension:
 
     client: spotipy.Spotify
@@ -24,12 +26,13 @@ class SpotifyExtension:
               "playlist-modify-private",
               "playlist-modify-public",
               "user-library-read"]
+    current_user = None
 
-    def __init__(self, app=None):
+    def __init__(self, app=None) -> None:
         if app is not None:
             self.init_app(app)
 
-    def init_app(self, app: Flask):
+    def init_app(self, app: Flask) -> None:
         auth_manager = SpotifyOAuth(
             client_id=app.config["SPOTIFY_CLIENT_ID"],
             client_secret=app.config["SPOTIFY_CLIENT_SECRET"],
@@ -39,25 +42,66 @@ class SpotifyExtension:
         )
         self.client = spotipy.Spotify(auth_manager=auth_manager)
 
-    def get_available_playlists(self):
+    @property
+    def user(self) -> list:
+        if self.current_user is None:
+            self.current_user = self.client.current_user()
+        return self.current_user
+
+    def get_available_playlists(self) -> dict:
         pls = self.client.current_user_playlists()
         return pls["items"]
 
-    def get_liked_songs(self):
-        return self.client.current_user_saved_tracks()
+    def get_liked_songs(self, limit=50, use_cache=True) -> tuple[str, list]:
+        from . import cache  # noqa
+        offset = 0
+        songs = []
+        songs_len = 1
 
-    def get_current_user(self):
-        return self.client.current_user()
+        cache_key = "{}:likes".format(self.user["uri"])
 
-    def export_playlist(self, playlist_id: str):
-        user = self.client.current_user()
+        if use_cache and cache.has(cache_key):
+            current_app.logger.warning(f"Loading cache key {cache_key}")
+            return "likes", cache.get(cache_key)
+
+        while songs_len != 0:
+            current_app.logger.info(f"Fetching likes from {offset} with a {limit} limit - Current len is {songs_len}")
+            results = self.client.current_user_saved_tracks(offset=offset, limit=limit)
+            songs += results["items"]
+
+            # Loop control
+            offset = limit + offset
+            songs_len = len(results["items"])
+
+        if use_cache:
+            cache.set(cache_key, songs)
+        return "likes", songs
+
+    def export_playlist(self, playlist_id: str) -> list | bool:
         if not self.client.playlist_is_following(
                 playlist_id=playlist_id,
-                user_ids=[user["id"]]):
+                user_ids=[self.user["id"]]):
             return False
 
         pls = self.client.playlist_items(playlist_id=playlist_id)
         return list(map(reduce_exporter, pls["items"]))
+
+    def create_playlist_from_liked_songs(self, playlist_name: str) -> Any:
+        n, likes = self.get_liked_songs()
+        uris = [t["track"]["uri"] for t in likes]
+
+        playlist = self.client.user_playlist_create(
+            user=self.user["id"],
+            name=playlist_name,
+            public=False,
+            collaborative=False,
+            description="Export from Liked Songs"
+        )
+        self.client.playlist_add_items(
+            playlist_id=playlist["id"],
+            items=uris
+        )
+        return playlist
 
 
 client = SpotifyExtension()

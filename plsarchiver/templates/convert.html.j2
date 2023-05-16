@@ -1,0 +1,4 @@
+{% extends "layout.html.j2" %}
+{% block content %}
+    <p>Your <strong>Liked Songs</strong> list has been copied into the <a href="{{ playlist["external_urls"]["spotify"] }}">{{ playlist["name"] }}</a> playlist.</p>
+{% endblock content %}

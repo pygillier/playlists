@@ -1,34 +1,11 @@
 {% extends "layout.html.j2" %}
 {% block content %}
-    <h1>Liked songs</h1>
-    {{ user }}
-    <table class="pure-table">
-        <thead>
-            <tr>
-                <th>Title</th>
-                <th>Artist</th>
-                <th>Album</th>
-                <th>Duration</th>
-                <th>Details</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for track in likes %}
-            <tr>
-                <td><a href="{{ track["track"]["external_urls"]["spotify"] }}">{{ track["track"]["name"] }}</a></td>
-                <td>
-                    <ul>
-                        {% for artist in track["track"]["artists"] %}
-                            <li><a href="{{ artist["external_urls"]["spotify"] }}">{{ artist["name"] }}</a></li>
-                        {% endfor %}
-                    </ul>
-                </td>
-                <td><a href="{{ track["track"]["album"]["external_urls"]["spotify"] }}">{{ track["track"]["album"]["name"] }}</a></td>
-                <td>{{ track["track"]["duration_ms"]|duration}}</td>
-                <td>{{ track }}</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <p>Hi {{ user["display_name"] }}! You have <strong>{{ likes|length }}</strong> tracks in your liked songs, totaling a <strong>{{ duration|default(0)|duration }}</strong> duration.</p>
+    <p>Some stats:</p>
+    <ul>
+        <li>The most recent has been added <time datetime="{{ youngest }}" title="{{ youngest }}">{{ youngest|timeago|default("Unset") }}</time>.</li>
+        <li>The oldest one has been added <time datetime="{{ oldest }}" title="{{ oldest }}">{{ oldest|timeago|default("Unset") }}</time>.</li>
+    </ul>
+    <p>Do you want to <a href="{{ url_for("convert_likes") }}">convert this list</a> into a standard playlist or <a href="{{ url_for("export_playlist", pls_id="likes")}}">export it</a>?</p>
+    <p>Unfortunately, due to Spotify limitations, the exported playlist will only contain excerpts from songs when available.</p>
 {% endblock %}

@@ -1,6 +1,7 @@
 from flask import Flask, render_template, Response
 from plsarchiver.spotify import client
 from plsarchiver.m3u import M3U
+from plsarchiver import forms
 from dateutil.parser import parse
 import datetime
 import timeago
@@ -43,6 +44,7 @@ def init_app(app: Flask):
                                user=client.user,
                                duration=duration,
                                oldest=oldest,
+                               convert_form=forms.ConvertLikesToPlsForm(),
                                youngest=youngest)
 
     @app.route("/convert")

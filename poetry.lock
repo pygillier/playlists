@@ -114,6 +114,22 @@ Flask = ">=2.2.2,<3.0.0"
 pytz = ">=2022.2.1,<2023.0.0"
 
 [[package]]
+name = "flask-wtf"
+version = "1.1.1"
+description = "Form rendering, validation, and CSRF protection for Flask with WTForms."
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+Flask = "*"
+itsdangerous = "*"
+WTForms = "*"
+
+[package.extras]
+email = ["email-validator"]
+
+[[package]]
 name = "idna"
 version = "3.4"
 description = "Internationalized Domain Names in Applications (IDNA)"
@@ -304,7 +320,7 @@ email = ["email-validator"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "520cd052ac875d7c82b4009416d1a2c095465640e477e92a07966346299796ca"
+content-hash = "b51f619c9b82fca7b6c9db6e819f52cd86680f2e72d28f8eb9b8c1ea230dd627"
 
 [metadata.files]
 async-timeout = [
@@ -423,6 +439,10 @@ flask-caching = [
 flask-session2 = [
     {file = "Flask-Session2-1.3.1.tar.gz", hash = "sha256:171e986d4e314795f448a527095e42df6abfba76c3e4ce5c8e4c61c857c59cb2"},
     {file = "Flask_Session2-1.3.1-py3-none-any.whl", hash = "sha256:6d1615dfc4b247759f31f89bf16aba96fa1294077e700771875abe952f291959"},
+]
+flask-wtf = [
+    {file = "Flask-WTF-1.1.1.tar.gz", hash = "sha256:41c4244e9ae626d63bed42ae4785b90667b885b1535d5a4095e1f63060d12aa9"},
+    {file = "Flask_WTF-1.1.1-py3-none-any.whl", hash = "sha256:7887d6f1ebb3e17bf648647422f0944c9a469d0fcf63e3b66fb9a83037e38b2c"},
 ]
 idna = [
     {file = "idna-3.4-py3-none-any.whl", hash = "sha256:90b77e79eaa3eba6de819a0c442c0b4ceefc341a7a2ab77d7562bf49f425c5c2"},

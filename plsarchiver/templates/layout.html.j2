@@ -12,8 +12,8 @@
         <script defer data-domain="playlists.pygillier.me" src="https://plausible.pygillier.me/js/plausible.js"></script>
     </head>
     <body>
-        <main class="container-md" id="content">
-            <nav class="navbar col-8 m-auto mb-3 navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
+        <main class="container-md mt-2">
+            <nav class="navbar col-8 m-auto navbar-expand-lg">
                 <div class="container-fluid">
                     <a class="navbar-brand" href="{{ url_for("home") }}">Playlists</a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -28,14 +28,17 @@
                     </div>
                 </div>
             </nav>
-            <div>
+            <section id="content" class="col-8 m-auto">
                 <div class="row">
-                    <div class="col-8 offset-md-2">
+                    <div class="col-10 offset-1 p-3">
 
             {% block content %}{% endblock %}
                     </div>
                 </div>
-            </div>
+            </section>
+            <footer class="col-8 m-auto p-lg-4">
+                <p>Footer content</p>
+            </footer>
             {% block scripts %}
                 <!-- Optional JavaScript -->
                 {{ bootstrap.load_js() }}

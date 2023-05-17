@@ -1,11 +1,15 @@
 {% extends "layout.html.j2" %}
 {% block content %}
-    <p>Hi {{ user["display_name"] }}! You have <strong>{{ likes|length }}</strong> tracks in your liked songs, totaling a <strong>{{ duration|default(0)|duration }}</strong> duration.</p>
+    <p>Hi {{ user["display_name"] }}! You have <strong>{{ likes|length }}</strong> tracks in your liked songs, totaling <strong>{{ duration|default(0)|duration }}</strong> of music.</p>
     <p>Some stats:</p>
     <ul>
         <li>The most recent has been added <time datetime="{{ youngest }}" title="{{ youngest }}">{{ youngest|timeago|default("Unset") }}</time>.</li>
         <li>The oldest one has been added <time datetime="{{ oldest }}" title="{{ oldest }}">{{ oldest|timeago|default("Unset") }}</time>.</li>
     </ul>
-    <p>Do you want to <a href="{{ url_for("convert_likes") }}">convert this list</a> into a standard playlist or <a href="{{ url_for("export_playlist", pls_id="likes")}}">export it</a>?</p>
+    <h2 class="pt-3">Convert to a playlist</h2>
+    <p>Do you want to <a href="{{ url_for("convert_likes") }}">convert this list</a> into a standard playlist ?</p>
+    <a href="{{ url_for("convert_likes") }}" class="btn btn-primary">Convert to a playlist</a>
+    <h2 class="pt-3">Export to m3u format</h2>
     <p>Unfortunately, due to Spotify limitations, the exported playlist will only contain excerpts from songs when available.</p>
+    <p class="mx-auto"><a class="btn btn-primary" href="{{ url_for("export_playlist", pls_id="likes")}}">Export to M3U</a></p>
 {% endblock %}

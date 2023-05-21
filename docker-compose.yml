@@ -8,6 +8,18 @@ services:
     command: redis-server --save 20 1 --loglevel warning
     volumes:
       - cache:/data
+  web:
+    image: nginx:1.23-alpine3.17-slim
+    volumes:
+      - ./production:/etc/nginx/conf.d
+    links:
+      - app
+  app:
+    build:
+      context: .
+    environment:
+      FLASK_ENV: prod
+      SPOTIFY_REDIRECT_URI: "https://playlists.pygillier.me"
 volumes:
   cache:
     driver: local

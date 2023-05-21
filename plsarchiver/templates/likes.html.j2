@@ -1,4 +1,5 @@
 {% extends "layout.html.j2" %}
+{% block title %}Liked songs &mdash; {% endblock %}
 {% block content %}
     <p>Hi {{ user["display_name"] }}! You have <strong>{{ likes|length }}</strong> tracks in your liked songs, totaling <strong>{{ duration|default(0)|duration }}</strong> of music.</p>
     <p>Some stats:</p>
@@ -7,7 +8,7 @@
         <li>The oldest one has been added <time datetime="{{ oldest }}" title="{{ oldest }}">{{ oldest|timeago|default("Unset") }}</time>.</li>
     </ul>
     <h2 class="pt-3">Convert to a playlist</h2>
-    <p>Do you want to <a href="{{ url_for("convert_likes") }}">convert this list</a> into a standard playlist ?</p>
+    <p>Your liked songs will be exported to a &laquo;normal&raquo; playlist. No song will be deleted from your liked songs.</p>
     <a href="{{ url_for("convert_likes") }}" class="btn btn-primary">Convert to a playlist</a>
     <h2 class="pt-3">Export to m3u format</h2>
     <p>Unfortunately, due to Spotify limitations, the exported playlist will only contain excerpts from songs when available.</p>

@@ -66,7 +66,7 @@ def init_app(app: Flask):
         else:
             (name, payload) = client.get_liked_songs()
 
-        user = client.get_current_user()
+        user = client.current_user
 
         return Response(
             M3U.convert(payload),

@@ -25,6 +25,9 @@ class Config:
     SPOTIFY_CLIENT_SECRET = os.getenv("SPOTIFY_CLIENT_SECRET")
     SPOTIFY_REDIRECT_URI = "http://localhost:5000"
 
+    # Debug toolbar
+    DEBUG_TB_INTERCEPT_REDIRECTS = False
+
 
 class DevelopmentConfig(Config):
     DEBUG = True

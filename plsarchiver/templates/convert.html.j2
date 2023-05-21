@@ -1,4 +1,7 @@
 {% extends "layout.html.j2" %}
+{% block title %}Conversion &mdash; {% endblock %}
 {% block content %}
+    <h2>Conversion completed!</h2>
     <p>Your <strong>Liked Songs</strong> list has been copied into the <a href="{{ playlist["external_urls"]["spotify"] }}">{{ playlist["name"] }}</a> playlist.</p>
+    <p><a href="{{ url_for("home") }}">Go back to home</a>.</p>
 {% endblock content %}

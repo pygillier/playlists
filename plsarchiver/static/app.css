@@ -46,3 +46,8 @@ h2 {
 	font-size: 1.1em;
 	border-bottom: 1px dotted #313543;
 }
+
+footer {
+	font-size: .9em;
+	text-align: right;
+}

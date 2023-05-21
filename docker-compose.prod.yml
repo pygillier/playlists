@@ -5,8 +5,6 @@ services:
     image: nginx:1.23-alpine3.17-slim
     volumes:
       - ./production:/etc/nginx/conf.d
-    ports:
-      - "8081:80"
     links:
       - app
   app:
@@ -14,6 +12,4 @@ services:
       context: .
     environment:
       FLASK_ENV: prod
-      SPOTIFY_REDIRECT_URI: "http://localhost:8081/oauth_dance"
-    ports:
-      - "8000:8000"
+      SPOTIFY_REDIRECT_URI: "https://playlists.pygillier.me"

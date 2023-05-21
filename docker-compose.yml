@@ -14,6 +14,8 @@ services:
       - ./production:/etc/nginx/conf.d
     links:
       - app
+    ports:
+      - "8080:80"
   app:
     build:
       context: .

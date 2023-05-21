@@ -27,20 +27,34 @@ class SpotifyExtension:
               "playlist-modify-public",
               "user-library-read"]
     current_user = None
+    cache_handler: FlaskSessionCacheHandler
+    auth_manager: SpotifyOAuth
 
     def __init__(self, app=None) -> None:
         if app is not None:
             self.init_app(app)
 
     def init_app(self, app: Flask) -> None:
-        auth_manager = SpotifyOAuth(
+        self.cache_handler = FlaskSessionCacheHandler(session)
+
+        self.auth_manager = SpotifyOAuth(
             client_id=app.config["SPOTIFY_CLIENT_ID"],
             client_secret=app.config["SPOTIFY_CLIENT_SECRET"],
-            redirect_uri="http://localhost:8082",
+            redirect_uri=f"{app.config['SPOTIFY_REDIRECT_URI']}/oauth_dance",
             scope=",".join(self.scopes),
-            cache_handler=FlaskSessionCacheHandler(session)
+            cache_handler=self.cache_handler
         )
-        self.client = spotipy.Spotify(auth_manager=auth_manager)
+
+        self.client = spotipy.Spotify(auth_manager=self.auth_manager)
+
+    def is_logged_in(self):
+        return self.auth_manager.validate_token(self.cache_handler.get_cached_token())
+
+    def get_authorize_url(self):
+        return self.auth_manager.get_authorize_url()
+
+    def get_access_token(self, token: str) -> None:
+        self.auth_manager.get_access_token(code=token)
 
     @property
     def user(self) -> list:

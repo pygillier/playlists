@@ -21,6 +21,11 @@
                     </button>
                     <div class="collapse navbar-collapse" id="navbarNav">
                         <ul class="navbar-nav ms-auto">
+                            {% if session["token_info"] %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for("forget_me") }}">Forget Me</a>
+                            </li>
+                            {% endif %}
                             <li class="nav-item">
                                 <a class="nav-link" href="#">About</a>
                             </li>
@@ -31,7 +36,7 @@
             <section id="content" class="col-8 m-auto">
                 <div class="row">
                     <div class="col-10 offset-1 p-3">
-
+                    {{ session }}
             {% block content %}{% endblock %}
                     </div>
                 </div>

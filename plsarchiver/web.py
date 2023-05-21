@@ -1,10 +1,14 @@
-from flask import Flask, render_template, Response
+from flask import Flask, render_template, Response, request, session, redirect
 from plsarchiver.spotify import client
 from plsarchiver.m3u import M3U
 from plsarchiver import forms
+from plsarchiver.decorators import login_required
 from dateutil.parser import parse
+from werkzeug.exceptions import HTTPException
+
 import datetime
 import timeago
+import json
 
 
 def init_app(app: Flask):
@@ -19,6 +23,7 @@ def init_app(app: Flask):
         return render_template("playlists.html.j2", playlists=user_playlists, user=user)
 
     @app.route("/likes")
+    @login_required
     def likes():
         name, user_likes = client.get_liked_songs()
         # Metrics
@@ -67,6 +72,35 @@ def init_app(app: Flask):
             M3U.convert(payload),
             mimetype='text/plain',
             headers={'Content-disposition': f"attachment; filename={user['id']}-liked-songs.m3u8"})
+
+    @app.route("/oauth_dance")
+    def handle_oauth():
+        # Do we have a code ?
+        if request.args.get("code"):
+            client.get_access_token(token=request.args.get("code"))
+            redirect_uri = session["login_redirect_uri"] if "login_redirect_uri" in session else "/"
+            return redirect(redirect_uri)
+        else:
+            return redirect("/")
+
+    @app.route("/forget")
+    def forget_me():
+        session.clear()
+        return redirect("/")
+
+    @app.errorhandler(HTTPException)
+    def handle_exception(e):
+        """Return JSON instead of HTML for HTTP errors."""
+        # start with the correct headers and status code from the error
+        response = e.get_response()
+        # replace the body with JSON
+        response.data = json.dumps({
+            "code": e.code,
+            "name": e.name,
+            "description": e.description,
+        })
+        response.content_type = "application/json"
+        return response
 
     # Template filter for track duration
     @app.template_filter('duration')

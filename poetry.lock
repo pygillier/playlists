@@ -101,6 +101,20 @@ cachelib = ">=0.9.0,<0.10.0"
 Flask = "<3"
 
 [[package]]
+name = "flask-debugtoolbar"
+version = "0.13.1"
+description = "A toolbar overlay for debugging Flask applications."
+category = "main"
+optional = false
+python-versions = ">=2.7"
+
+[package.dependencies]
+Blinker = "*"
+Flask = ">=0.8"
+itsdangerous = "*"
+werkzeug = "*"
+
+[[package]]
 name = "flask-session2"
 version = "1.3.1"
 description = "Adds server-side session support to your Flask application"
@@ -408,7 +422,7 @@ email = ["email-validator"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "e085dd7ed2d2dcb65ce163b27ea6522a036436ac374fb8b8163dd58fd9a39fdd"
+content-hash = "1813d14d2996fdf1464b5e712f9acd1c07c6056ee833f18ed8444f4d576d57a0"
 
 [metadata.files]
 async-timeout = [
@@ -523,6 +537,10 @@ flask = [
 flask-caching = [
     {file = "Flask-Caching-2.0.2.tar.gz", hash = "sha256:24b60c552d59a9605cc1b6a42c56cdb39a82a28dab4532bbedb9222ae54ecb4e"},
     {file = "Flask_Caching-2.0.2-py3-none-any.whl", hash = "sha256:19571f2570e9b8dd9dd9d2f49d7cbee69c14ebe8cc001100b1eb98c379dd80ad"},
+]
+flask-debugtoolbar = [
+    {file = "Flask-DebugToolbar-0.13.1.tar.gz", hash = "sha256:0c26aa013a9813b8886857bf0ec24d28ab494114a264baf06c951cadc4dd0dae"},
+    {file = "Flask_DebugToolbar-0.13.1-py3-none-any.whl", hash = "sha256:491c737f321830c06a2835784acf1fc8488fd257a0ef318810b3b6bed5f600d5"},
 ]
 flask-session2 = [
     {file = "Flask-Session2-1.3.1.tar.gz", hash = "sha256:171e986d4e314795f448a527095e42df6abfba76c3e4ce5c8e4c61c857c59cb2"},

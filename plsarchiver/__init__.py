@@ -3,6 +3,7 @@ from flask import Flask
 from flask_session import Session
 from flask_caching import Cache
 from flask_bootstrap import Bootstrap5
+from flask_debugtoolbar import DebugToolbarExtension
 from plsarchiver import web
 import os
 import logging
@@ -39,7 +40,9 @@ def create_app(config=None):
         )
 
     app.logger.info(f"Loaded {current_env} configuration")
-    app.logger.warning(f"Redis DSN: {app.config['CACHE_REDIS_HOST']}:{app.config['CACHE_REDIS_PORT']}")
+
+    if app.config["DEBUG"] is True:
+        toolbar = DebugToolbarExtension(app)
 
     # Session
     sess = Session()

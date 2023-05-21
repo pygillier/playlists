@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  web:
+    image: nginx:1.23-alpine3.17-slim
+    ports:
+      - "80:80"
+    links:
+      - app
+  app:
+    build:
+      context: .
+    environment:
+      FLASK_ENV: prod
+    ports:
+      - "8000:8000"

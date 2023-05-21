@@ -5,6 +5,10 @@ from flask_caching import Cache
 from flask_bootstrap import Bootstrap5
 from plsarchiver import web
 import os
+import logging
+import sentry_sdk
+from sentry_sdk.integrations.flask import FlaskIntegration
+
 
 load_dotenv()
 
@@ -14,23 +18,33 @@ __version__ = "0.1.0"
 cache = Cache()
 
 
-def create_app(test_config=None):
+def create_app(config=None):
     app = Flask(__name__)
 
-    # Default configuration
-    app.config.from_mapping(
-        SESSION_COOKIE_SECURE=True,
-        SESSION_TYPE="redis",
-        SECRET_KEY="9e112ed7b89c58e9934d4c662152b31f0cb5776a8361a0e6293c146ca0107aaa",
-        SPOTIFY_CLIENT_ID=os.getenv("SPOTIFY_CLIENT_ID"),
-        SPOTIFY_CLIENT_SECRET=os.getenv("SPOTIFY_CLIENT_SECRET"),
-        CACHE_TYPE="RedisCache",
-        CACHE_REDIS_URL=os.getenv("REDIS_URL", "redis://redis:6379/0")
-    )
+    # Load configuration
+    current_env = config if config is not None else os.getenv("FLASK_ENV")
+    app.config.from_object(f"plsarchiver.settings.{current_env}")
+
+    # Eager prod configuration for services & logs
+    if config == "prod":
+        # Reuse gunicorn logging
+        gunicorn_logger = logging.getLogger('gunicorn.error')
+        app.logger.handlers = gunicorn_logger.handlers
+        app.logger.setLevel(gunicorn_logger.level)
+
+        # Setup Sentry
+        sentry_sdk.init(
+            dsn="",
+            integrations=[FlaskIntegration()]
+        )
+
+    app.logger.info(f"Loaded {current_env} configuration")
+    app.logger.warning(f"Redis DSN: {app.config['CACHE_REDIS_HOST']}:{app.config['CACHE_REDIS_PORT']}")
 
     # Session
     sess = Session()
     sess.init_app(app)
+    app.logger.debug("Session init")
 
     # Cache
     cache.init_app(app)

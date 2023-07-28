@@ -9,13 +9,10 @@ services:
     volumes:
       - cache:/data
   web:
-    image: nginx:1.23-alpine3.17-slim
-    volumes:
-      - ./production:/etc/nginx/conf.d
-    links:
-      - app
+    build:
+      context: nginx
     ports:
-      - "8080:80"
+      - '8080:80'
   app:
     build:
       context: .
